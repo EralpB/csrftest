@@ -1,0 +1,52 @@
+// handles the click event, sends the query
+<html>
+<head>
+</head>
+<body>
+<a href="#" onclick="return getSuccessOutput();"> test success </a>
+<div id="output">waiting for action</div>
+<script>
+function sendPostWithToken(token){
+alert("token is: " + token);
+	$.ajax({
+      url:'https://iam.connectedmobilitylab.de/login.do',
+        type: "POST",
+        data: { 
+        'X-Uaa-Csrf': token, 
+         'username': 'test', 
+          'password': 'test2', 
+    },
+    xhrFields:
+    {
+       withCredentials: true
+    },
+        complete: function (response) {
+            $('#output').html(response.responseText);
+        },
+        error: function () {
+            $('#output').html('Bummer: there was an error!');
+        },
+    });
+}
+
+function getSuccessOutput() {
+    $.ajax({
+        url:'https://iam.connectedmobilitylab.de/login',
+        complete: function (response) {
+           
+            $('#output').text(response.responseText);
+            var regExp = /X-Uaa-Csrf".*?value="(.*?)"/;
+            var matches = regExp.exec(response.responseText);
+
+            //matches[1] contains the value between the parentheses
+            sendPostWithToken(matches[1]);
+        },
+        error: function () {
+            $('#output').html('Bummer: there was an error!');
+        },
+    });
+    return false;
+}
+</script>
+</body>
+</html>

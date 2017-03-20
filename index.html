@@ -35,6 +35,10 @@ alert("token is: " + token);
 function getSuccessOutput() {
     $.ajax({
         url:'https://iam.connectedmobilitylab.de/login',
+	    xhrFields:
+    {
+       withCredentials: true
+    },
         complete: function (response) {
            
             $('#output').text(response.responseText);
